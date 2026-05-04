@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP Monitor Pro</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fafafa; color: #262626; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { background: white; border: 1px solid #dbdbdb; padding: 30px; border-radius: 8px; width: 100%; max-width: 400px; text-align: center; }
+        h2 { margin-bottom: 20px; color: #E1306C; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #dbdbdb; border-radius: 5px; box-sizing: border-box; background: #fafafa; }
+        button { width: 100%; padding: 12px; background: #0095f6; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        button:hover { background: #1877f2; }
+        .status-list { width: 100%; max-width: 400px; margin-top: 30px; }
+        .user-item { background: white; border: 1px solid #dbdbdb; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .username { font-weight: 600; color: #00376b; }
+        .time { font-size: 0.75rem; color: #8e8e8e; }
+        .badge { background: #ed4956; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📸 Monitor IG</h2>
+        <p>Checks for DP changes every 1 minute</p>
+        <input type="text" id="username" placeholder="Instagram Username (e.g. zuck)">
+        <button id="btn" onclick="trackUser()">Track Changes</button>
+    </div>
+
+    <div class="status-list" id="userList">
+        </div>
+
+    <script>
+        async function fetchUsers() {
+            const res = await fetch('/api/users');
+            const data = await res.json();
+            const list = document.getElementById('userList');
+            list.innerHTML = data.map(u => `
+                <div class="user-item">
+                    <div>
+                        <div class="username">@${u.username}</div>
+                        <div class="time">Last Checked: ${new Date(u.lastUpdated).toLocaleTimeString()}</div>
+                    </div>
+                    <div class="badge">Live Tracking</div>
+                </div>
+            `).join('');
+        }
+
+        async function trackUser() {
+            const btn = document.getElementById('btn');
+            const userBox = document.getElementById('username');
+            const username = userBox.value;
+            
+            if(!username) return alert("Please enter a username");
+            
+            btn.innerText = "Connecting...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/track', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                const result = await res.json();
+                alert(result.message || result.error);
+                userBox.value = '';
+                fetchUsers();
+            } catch (e) {
+                alert("Error connecting to server");
+            } finally {
+                btn.innerText = "Track Changes";
+                btn.disabled = false;
+            }
+        }
+
+        fetchUsers();
+        setInterval(fetchUsers, 10000);
+    </script>
+</body>
+</html>
