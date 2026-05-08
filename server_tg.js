@@ -10,6 +10,7 @@ const { MONGODB_URI, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } = process.env;
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // --- DATABASE ---
 mongoose.connect(MONGODB_URI)
