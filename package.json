@@ -2,9 +2,9 @@
   "name": "ig-dp-monitor",
   "version": "1.0.0",
   "description": "Instagram Profile Picture Change Detector with Email Alerts",
-  "main": "server.js",
+  "main": "server_tg.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server_tg.js",
     "dev": "nodemon server.js"
   },
   "keywords": [
