@@ -139,6 +139,11 @@ app.post('/api/track', async (req, res) => {
     res.json({ message: `Tracking @${username}` });
 });
 
+app.get('/api/users', async (req, res) => {
+    const users = await IgUser.find();
+    res.json(users);
+});
+
 // Use 2 minutes for Render stability
 // cron.schedule('*/2 * * * *', checkAllUsers);
 function scheduleRandom() {
