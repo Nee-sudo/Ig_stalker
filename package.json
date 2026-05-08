@@ -21,9 +21,11 @@
     "cacheable-lookup": "^7.0.0",
     "dotenv": "^17.4.2",
     "express": "^4.18.2",
+    "https-proxy-agent": "^9.0.0",
     "mongoose": "^8.0.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.7",
-    "sharp": "^0.32.6"
+    "sharp": "^0.32.6",
+    "socks-proxy-agent": "^10.0.0"
   }
 }
